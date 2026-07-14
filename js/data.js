@@ -1,7 +1,7 @@
 /**
  * data.js
  * Capa de datos de BienEstar PYME.
- * Centraliza la informacion simulada (mock) y su persistencia en
+ * Centraliza la información simulada (mock) y su persistencia en
  * localStorage. En una version de produccion este modulo se
  * sustituiria por llamadas a una API real, sin tener que tocar
  * el resto de la aplicacion.
@@ -13,10 +13,10 @@ const STORAGE_KEYS = {
   SESION: "bp_sesion",
 };
 
-const AREAS = ["Administracion", "Ventas", "Operaciones", "Servicio al cliente"];
+const AREAS = ["Administración", "Ventas", "Operaciones", "Servicio al cliente"];
 
 const PREGUNTAS_ENCUESTA = [
-  "Me siento con energia durante mi jornada laboral.",
+  "Me siento con energía durante mi jornada laboral.",
   "Percibo un buen ambiente y respeto en mi equipo.",
   "Mi carga de trabajo es manejable.",
   "Recibo reconocimiento por mi trabajo.",
@@ -29,14 +29,14 @@ const SERIE_BIENESTAR = [68, 70, 69, 72, 74, 76];
 const SERIE_PRODUCTIVIDAD = [71, 72, 74, 73, 76, 78];
 
 /* Bienestar por area para la grafica de barras. */
-const BIENESTAR_POR_AREA = { "Administracion": 78, "Ventas": 69, "Operaciones": 64, "Servicio al cliente": 72 };
+const BIENESTAR_POR_AREA = { "Administración": 78, "Ventas": 69, "Operaciones": 64, "Servicio al cliente": 72 };
 
 /* Distribucion del riesgo psicosocial para la grafica de dona. */
-const RIESGO_PSICOSOCIAL = { "Controlado": 76, "En atencion": 24 };
+const RIESGO_PSICOSOCIAL = { "Controlado": 76, "En atención": 24 };
 
 /* Reporte consolidado por area (modulo de Reportes y alertas). */
 const REPORTE_AREAS = [
-  { area: "Administracion", bienestar: 78, clima: 75, productividad: 76, rotacion: 6, estado: "ok" },
+  { area: "Administración", bienestar: 78, clima: 75, productividad: 76, rotacion: 6, estado: "ok" },
   { area: "Ventas", bienestar: 69, clima: 75, productividad: 68, rotacion: 14, estado: "warn" },
   { area: "Operaciones", bienestar: 64, clima: 75, productividad: 63, rotacion: 18, estado: "danger" },
   { area: "Servicio al cliente", bienestar: 72, clima: 75, productividad: 71, rotacion: 11, estado: "warn" },
@@ -59,7 +59,7 @@ const KPIS_DASHBOARD = {
 
 const EMPRESA_DEFAULT = {
   nombre: "Empresa demo",
-  ciudad: "Ibague",
+  ciudad: "Ibagué",
   colaboradores: 48,
   periodicidad: "Mensual",
 };
