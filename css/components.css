@@ -105,6 +105,11 @@
 
 .kpi__icon svg { width: 18px; height: 18px; }
 
+/* Variantes de color del icono del KPI, para diferenciar cada indicador. */
+.kpi__icon--warning { background: var(--color-warning-bg); color: var(--color-warning); }
+.kpi__icon--success { background: var(--color-success-bg); color: var(--color-success); }
+.kpi__icon--danger { background: var(--color-danger-bg); color: var(--color-danger); }
+
 /* Badges de estado */
 .badge {
   display: inline-flex;
