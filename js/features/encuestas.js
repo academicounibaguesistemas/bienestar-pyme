@@ -16,13 +16,19 @@ const Encuestas = {
         <div class="likert-options">
           ${[1, 2, 3, 4, 5].map(v => `
             <label>
-              <input type="radio" name="p${i}" value="${v}" onchange="Encuestas.actualizarProgreso()">
+              <input type="radio" name="p${i}" value="${v}">
               ${v}
             </label>
           `).join("")}
         </div>
       </div>
     `).join("");
+
+    // Los listeners se agregan aqui (en JS) en lugar de con onchange="" en el
+    // marcado, para mantener el HTML libre de comportamiento inline.
+    form.querySelectorAll('input[type="radio"]').forEach(input => {
+      input.addEventListener("change", () => this.actualizarProgreso());
+    });
 
     form.dataset.listo = "true";
     this.actualizarProgreso();
