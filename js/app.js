@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Formularios de los modulos.
   document.getElementById("formEncuesta").addEventListener("submit", e => Encuestas.enviar(e));
-  document.getElementById("formConfiguracion").addEventListener("submit", e => Configuracion.guardar(e));
+  document.getElementById("formConfiguracion").addEventListener("submit", e => Configuracion.guardarEmpresa(e));
   document.getElementById("btnExportarPDF").addEventListener("click", () => Reportes.exportarPDF());
 
   // Si ya habia una sesion iniciada (localStorage), entra directo al tablero.
