@@ -17,7 +17,7 @@ const Reportes = {
         <td>${r.clima}</td>
         <td>${r.productividad}</td>
         <td>${r.rotacion}%</td>
-        <td><span class="badge ${claseBadge(r.estado)}">${etiquetaEstado(r.estado)}</span></td>
+        <td>${badgeHTML(r.estado)}</td>
       </tr>
     `).join("");
   },
