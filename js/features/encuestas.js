@@ -4,6 +4,12 @@
  * clasificacion del colaborador (area, cargo, antiguedad) y el
  * formulario tipo Likert a partir de PREGUNTAS_ENCUESTA, controla
  * la barra de progreso y guarda la respuesta en localStorage.
+ *
+ * El campo Area ya no viene de una lista fija en el codigo: se consulta
+ * dinamicamente con DataStore.getAreas(), que refleja lo administrado en
+ * el modulo de Configuracion. El periodo de medicion activo se asocia
+ * automaticamente a cada respuesta dentro de DataStore.guardarRespuestaEncuesta,
+ * sin que este modulo deba encargarse de eso.
  */
 
 const Encuestas = {
@@ -41,7 +47,9 @@ const Encuestas = {
    * Genera los 3 campos de clasificacion del colaborador (area, cargo,
    * antiguedad) que se muestran antes de las preguntas de bienestar.
    * Reutiliza la misma clase ".field" usada en el resto de formularios
-   * de la aplicacion, sin agregar estilos nuevos.
+   * de la aplicacion, sin agregar estilos nuevos. Las areas se leen de
+   * DataStore.getAreas() (administradas en Configuracion); cargo y
+   * antiguedad siguen usando las listas fijas del modulo de datos.
    */
   camposClasificacionHTML() {
     const campo = (id, etiqueta, opciones) => `
@@ -53,8 +61,9 @@ const Encuestas = {
         </select>
       </div>
     `;
+    const nombresAreas = DataStore.getAreas().map(a => a.nombre);
     return (
-      campo("encArea", "Área del colaborador", AREAS_ENCUESTA) +
+      campo("encArea", "Área del colaborador", nombresAreas) +
       campo("encCargo", "Cargo", CARGOS_ENCUESTA) +
       campo("encAntiguedad", "Antigüedad en la empresa", ANTIGUEDAD_ENCUESTA)
     );
@@ -104,7 +113,7 @@ const Encuestas = {
     // respuesta, sin necesidad de recargar la pagina.
     if (typeof Dashboard !== "undefined") Dashboard.render();
     if (typeof Reportes !== "undefined") Reportes.render();
-    
+
     mostrarToast("Respuesta enviada correctamente. ¡Gracias por tu retroalimentacion!");
 
     document.getElementById("formEncuesta").reset();
