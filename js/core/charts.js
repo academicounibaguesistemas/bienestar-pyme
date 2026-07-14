@@ -3,7 +3,11 @@
  * Inicializacion de las graficas de Chart.js usadas en el tablero.
  * Centraliza la paleta de colores (leida desde las variables CSS)
  * para que todas las graficas luzcan consistentes con el resto
- * de la interfaz.
+ * de la interfaz. Los datos de las graficas de linea (evolucion) y de
+ * dona (riesgo) se calculan dinamicamente (ver indicadores.js) a partir
+ * de las encuestas guardadas en localStorage; la grafica de barras por
+ * area todavia usa datos de demostracion mientras no exista el desglose
+ * real por area (previsto para un proximo sprint).
  */
 
 const Charts = {
@@ -15,14 +19,16 @@ const Charts = {
     if (!ctx) return;
     if (this.instancias.line) this.instancias.line.destroy();
 
+    const serie = SerieHistorica.calcular();
+
     this.instancias.line = new Chart(ctx, {
       type: "line",
       data: {
-        labels: SERIE_MESES,
+        labels: serie.labels,
         datasets: [
           {
             label: "Bienestar",
-            data: SERIE_BIENESTAR,
+            data: serie.bienestar,
             borderColor: cssVar("--color-primary"),
             backgroundColor: "rgba(37,99,235,0.08)",
             tension: 0.35,
@@ -30,7 +36,7 @@ const Charts = {
           },
           {
             label: "Productividad",
-            data: SERIE_PRODUCTIVIDAD,
+            data: serie.productividad,
             borderColor: cssVar("--color-success"),
             backgroundColor: "rgba(22,163,74,0.06)",
             tension: 0.35,
@@ -81,12 +87,14 @@ const Charts = {
     if (!ctx) return;
     if (this.instancias.donut) this.instancias.donut.destroy();
 
+    const distribucion = DistribucionRiesgo.calcular();
+
     this.instancias.donut = new Chart(ctx, {
       type: "doughnut",
       data: {
-        labels: Object.keys(RIESGO_PSICOSOCIAL),
+        labels: Object.keys(distribucion),
         datasets: [{
-          data: Object.values(RIESGO_PSICOSOCIAL),
+          data: Object.values(distribucion),
           backgroundColor: [cssVar("--color-success"), cssVar("--color-warning")],
           borderWidth: 0,
         }],
