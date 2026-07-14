@@ -5,13 +5,22 @@
  * para que todas las graficas luzcan consistentes con el resto
  * de la interfaz. Los datos de las graficas de linea (evolucion) y de
  * dona (riesgo) se calculan dinamicamente (ver indicadores.js) a partir
- * de las encuestas guardadas en localStorage; la grafica de barras por
- * area todavia usa datos de demostracion mientras no exista el desglose
- * real por area (previsto para un proximo sprint).
+ * de las encuestas guardadas en localStorage. Desde el Sprint 4A, la
+ * grafica de barras tambien es dinamica: usa IndicadoresPorArea para
+ * mostrar el bienestar real de cada area que ya tiene encuestas
+ * respondidas (las areas sin respuestas no se muestran); mientras no
+ * exista ninguna encuesta real, se usa BIENESTAR_POR_AREA (datos de
+ * demostracion definidos en data.js) para que el prototipo no se vea
+ * vacio.
  */
 
 const Charts = {
   instancias: {},
+
+  /** Paleta ciclica reutilizada por las graficas de barras y dona. */
+  paleta() {
+    return [cssVar("--color-primary"), cssVar("--color-success"), cssVar("--color-warning"), cssVar("--color-danger")];
+  },
 
   /** Grafica de lineas: evolucion de bienestar y productividad. */
   renderLineChart() {
@@ -52,24 +61,31 @@ const Charts = {
     });
   },
 
-  /** Grafica de barras: bienestar por area. */
+  /**
+   * Grafica de barras: bienestar por area. Usa los indicadores reales
+   * por area (Sprint 4A) cuando ya existen encuestas respondidas; solo
+   * aparecen las areas que efectivamente tienen respuestas. Mientras no
+   * exista ninguna encuesta real, muestra los datos de demostracion.
+   */
   renderBarChart() {
     const ctx = document.getElementById("chBar");
     if (!ctx) return;
     if (this.instancias.bar) this.instancias.bar.destroy();
 
+    const porArea = IndicadoresPorArea.calcular();
+    const datos = porArea.length
+      ? Object.fromEntries(porArea.map(a => [a.area, a.bienestar]))
+      : BIENESTAR_POR_AREA;
+
+    const paleta = this.paleta();
+
     this.instancias.bar = new Chart(ctx, {
       type: "bar",
       data: {
-        labels: Object.keys(BIENESTAR_POR_AREA),
+        labels: Object.keys(datos),
         datasets: [{
-          data: Object.values(BIENESTAR_POR_AREA),
-          backgroundColor: [
-            cssVar("--color-primary"),
-            cssVar("--color-success"),
-            cssVar("--color-warning"),
-            cssVar("--color-danger"),
-          ],
+          data: Object.values(datos),
+          backgroundColor: Object.keys(datos).map((_, i) => paleta[i % paleta.length]),
           borderRadius: 6,
         }],
       },
