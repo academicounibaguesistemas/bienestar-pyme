@@ -1,0 +1,49 @@
+/* ===========================================================
+   BienEstar PYME — Pantalla de acceso
+   =========================================================== */
+#login {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  padding: var(--space-md);
+}
+
+.login-card {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  width: 100%;
+  max-width: 380px;
+  padding: var(--space-xl) var(--space-lg);
+}
+
+.login-card__logo {
+  text-align: center;
+  font-size: var(--fs-xl);
+  font-weight: 800;
+  color: var(--color-primary);
+  margin-bottom: 4px;
+}
+.login-card__logo span { color: var(--color-success); }
+
+.login-card__sub {
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: var(--fs-xs);
+  margin-bottom: var(--space-lg);
+}
+
+.login-card__hint {
+  text-align: center;
+  font-size: 11px;
+  color: var(--color-text-muted);
+  margin-top: var(--space-md);
+  background: var(--color-bg);
+  padding: 10px;
+  border-radius: var(--radius-sm);
+}
+
+.login-card .btn { margin-top: var(--space-sm); }
