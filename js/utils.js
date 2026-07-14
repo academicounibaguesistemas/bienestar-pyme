@@ -1,4 +1,4 @@
-js/utils.js/**
+/**
  * utils.js
  * Funciones de apoyo reutilizables en toda la aplicacion.
  */
@@ -10,7 +10,7 @@ function claseBadge(estado) {
 
 /** Devuelve la etiqueta legible de un estado. */
 function etiquetaEstado(estado) {
-  return { ok: "Optimo", warn: "Atencion", danger: "Critico" }[estado] || estado;
+  return { ok: "Óptimo", warn: "Atención", danger: "Crítico" }[estado] || estado;
 }
 
 /** Formatea la fecha actual en espanol, ej. "13 de julio de 2026". */
