@@ -13,6 +13,14 @@ function etiquetaEstado(estado) {
   return { ok: "Óptimo", warn: "Atención", danger: "Crítico" }[estado] || estado;
 }
 
+/**
+ * Genera el marcado de un badge de estado completo (clase + etiqueta).
+ * Centraliza un fragmento que antes se repetia igual en dashboard.js y reportes.js.
+ */
+function badgeHTML(estado) {
+  return `<span class="badge ${claseBadge(estado)}">${etiquetaEstado(estado)}</span>`;
+}
+
 /** Formatea la fecha actual en espanol, ej. "13 de julio de 2026". */
 function fechaLarga(date = new Date()) {
   return date.toLocaleDateString("es-CO", { day: "numeric", month: "long", year: "numeric" });
