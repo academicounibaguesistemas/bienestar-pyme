@@ -32,6 +32,15 @@
  * informacion por area bajo ninguna circunstancia. Las encuestas
  * registradas antes del Sprint 3 (que no guardaron area) tampoco se
  * incluyen en el desglose por area, para no mostrar una area "vacia".
+ *
+ * Sprint 4B extiende el mismo patron a los campos "cargo" y "antiguedad"
+ * que tambien captura la encuesta: agrega el desglose real por cargo
+ * (IndicadoresPorCargo) y por antiguedad (IndicadoresPorAntiguedad), su
+ * respectivo ranking ejecutivo (RankingCargos y RankingAntiguedad) y un
+ * generador de hallazgos automaticos (HallazgosPrincipales) que redacta
+ * frases simples a partir de esos rankings, sin usar inteligencia
+ * artificial. Aplican las mismas reglas que en Sprint 4A: un cargo o un
+ * grupo de antiguedad sin encuestas reales nunca aparece en estos calculos.
  */
 
 const Indicadores = {
@@ -85,6 +94,19 @@ const Indicadores = {
       texto: `${signo}${diferencia} pts vs. período anterior`,
       tendencia: diferencia >= 0 ? "up" : "down",
     };
+  },
+
+  /**
+   * Devuelve el elemento de la lista con el valor mas alto ("max") o mas
+   * bajo ("min") de "campo". Centraliza la logica de ranking reutilizada
+   * por RankingCargos y RankingAntiguedad (Sprint 4B) para no repetir el
+   * mismo reduce() en cada modulo.
+   */
+  extremo(lista, campo, modo = "max") {
+    return lista.reduce((seleccionado, actual) => {
+      if (modo === "min") return actual[campo] < seleccionado[campo] ? actual : seleccionado;
+      return actual[campo] > seleccionado[campo] ? actual : seleccionado;
+    });
   },
 
   /**
@@ -274,5 +296,163 @@ const AlertasPorArea = {
       }
     });
     return alertas;
+  },
+};
+
+/* ---------- Indicadores desagregados por cargo (Sprint 4B) ---------- */
+
+const IndicadoresPorCargo = {
+  /**
+   * Agrupa las encuestas guardadas por el campo "cargo" (seleccionado
+   * por el colaborador al responder) y calcula los 4 indicadores para
+   * cada cargo que tenga al menos una encuesta real, reutilizando
+   * Indicadores.calcularDesdeEncuestas (igual que IndicadoresPorArea).
+   * Los cargos sin respuestas registradas no se incluyen. Devuelve un
+   * arreglo ordenado de mayor a menor bienestar.
+   */
+  calcular() {
+    const encuestas = DataStore.getEncuestasGuardadas().filter(e => !!e.cargo);
+    if (!encuestas.length) return [];
+
+    const grupos = {};
+    encuestas.forEach(e => {
+      if (!grupos[e.cargo]) grupos[e.cargo] = [];
+      grupos[e.cargo].push(e);
+    });
+
+    return Object.keys(grupos)
+      .map(cargo => ({
+        cargo,
+        totalEncuestas: grupos[cargo].length,
+        ...Indicadores.calcularDesdeEncuestas(grupos[cargo]),
+      }))
+      .sort((a, b) => b.bienestar - a.bienestar);
+  },
+};
+
+/* ---------- Ranking ejecutivo de cargos (Sprint 4B) ---------- */
+
+const RankingCargos = {
+  /**
+   * Devuelve el cargo destacado en cada indicador (mayor bienestar,
+   * menor bienestar, mayor riesgo psicosocial, mejor productividad y
+   * menor productividad), reutilizando Indicadores.extremo. Devuelve
+   * null si todavia no hay ninguna encuesta con cargo registrado.
+   */
+  calcular() {
+    const porCargo = IndicadoresPorCargo.calcular();
+    if (!porCargo.length) return null;
+
+    return {
+      mayorBienestar: Indicadores.extremo(porCargo, "bienestar", "max"),
+      menorBienestar: Indicadores.extremo(porCargo, "bienestar", "min"),
+      mayorRiesgo: Indicadores.extremo(porCargo, "riesgo", "max"),
+      mejorProductividad: Indicadores.extremo(porCargo, "productividad", "max"),
+      menorProductividad: Indicadores.extremo(porCargo, "productividad", "min"),
+    };
+  },
+};
+
+/* ---------- Indicadores desagregados por antiguedad (Sprint 4B) ---------- */
+
+const IndicadoresPorAntiguedad = {
+  /**
+   * Igual que IndicadoresPorCargo, pero agrupando por el campo
+   * "antiguedad". A diferencia del desglose por area/cargo (ordenado por
+   * bienestar), aqui se ordena segun el orden cronologico definido en
+   * ANTIGUEDAD_ENCUESTA (ver data.js), de menor a mayor tiempo en la
+   * empresa, para que la tabla de Reportes se lea de forma progresiva.
+   */
+  calcular() {
+    const encuestas = DataStore.getEncuestasGuardadas().filter(e => !!e.antiguedad);
+    if (!encuestas.length) return [];
+
+    const grupos = {};
+    encuestas.forEach(e => {
+      if (!grupos[e.antiguedad]) grupos[e.antiguedad] = [];
+      grupos[e.antiguedad].push(e);
+    });
+
+    return Object.keys(grupos)
+      .map(antiguedad => ({
+        antiguedad,
+        totalEncuestas: grupos[antiguedad].length,
+        ...Indicadores.calcularDesdeEncuestas(grupos[antiguedad]),
+      }))
+      .sort((a, b) => ANTIGUEDAD_ENCUESTA.indexOf(a.antiguedad) - ANTIGUEDAD_ENCUESTA.indexOf(b.antiguedad));
+  },
+};
+
+/* ---------- Ranking ejecutivo por antiguedad (Sprint 4B) ---------- */
+
+const RankingAntiguedad = {
+  /**
+   * Igual que RankingCargos, pero para los grupos de antiguedad. Devuelve
+   * null si todavia no hay ninguna encuesta con antiguedad registrada.
+   */
+  calcular() {
+    const porAntiguedad = IndicadoresPorAntiguedad.calcular();
+    if (!porAntiguedad.length) return null;
+
+    return {
+      mayorBienestar: Indicadores.extremo(porAntiguedad, "bienestar", "max"),
+      menorBienestar: Indicadores.extremo(porAntiguedad, "bienestar", "min"),
+      mayorRiesgo: Indicadores.extremo(porAntiguedad, "riesgo", "max"),
+      mejorProductividad: Indicadores.extremo(porAntiguedad, "productividad", "max"),
+      menorProductividad: Indicadores.extremo(porAntiguedad, "productividad", "min"),
+    };
+  },
+};
+
+/* ---------- Hallazgos automaticos por cargo y antiguedad (Sprint 4B) ---------- */
+
+const HallazgosPrincipales = {
+  /**
+   * Redacta frases sencillas a partir de RankingCargos y
+   * RankingAntiguedad mediante reglas simples (sin inteligencia
+   * artificial): solo leen los indicadores ya calculados y eligen el
+   * texto segun sus valores. Devuelve un arreglo de frases; vacio si aun
+   * no hay encuestas con cargo ni con antiguedad registrados.
+   */
+  generar() {
+    const frases = [];
+    const rankingCargos = RankingCargos.calcular();
+    const rankingAntiguedad = RankingAntiguedad.calcular();
+
+    if (rankingCargos) {
+      frases.push(
+        `El mayor nivel de bienestar se presenta en el cargo "${rankingCargos.mayorBienestar.cargo}" (${rankingCargos.mayorBienestar.bienestar} pts).`
+      );
+      frases.push(
+        `El mayor riesgo psicosocial se concentra en el cargo "${rankingCargos.mayorRiesgo.cargo}" (${rankingCargos.mayorRiesgo.riesgo}%).`
+      );
+    }
+
+    if (rankingAntiguedad) {
+      const porAntiguedad = IndicadoresPorAntiguedad.calcular();
+      const mayorAntiguedad = porAntiguedad[porAntiguedad.length - 1];
+      const nivelBienestar =
+        mayorAntiguedad.bienestar >= 75 ? "un bienestar alto" : mayorAntiguedad.bienestar >= 65 ? "un bienestar moderado" : "un bienestar bajo";
+      frases.push(
+        `Los colaboradores con mayor antigüedad ("${mayorAntiguedad.antiguedad}") presentan ${nivelBienestar} (${mayorAntiguedad.bienestar} pts) y un riesgo psicosocial de ${mayorAntiguedad.riesgo}%.`
+      );
+    }
+
+    if (rankingCargos || rankingAntiguedad) {
+      const candidatos = [];
+      if (rankingCargos) {
+        candidatos.push({ etiqueta: `el cargo "${rankingCargos.menorProductividad.cargo}"`, valor: rankingCargos.menorProductividad.productividad });
+      }
+      if (rankingAntiguedad) {
+        candidatos.push({
+          etiqueta: `el grupo de antigüedad "${rankingAntiguedad.menorProductividad.antiguedad}"`,
+          valor: rankingAntiguedad.menorProductividad.productividad,
+        });
+      }
+      const menor = candidatos.reduce((peor, actual) => (actual.valor < peor.valor ? actual : peor));
+      frases.push(`El grupo con menor productividad corresponde a ${menor.etiqueta} (${menor.valor} pts).`);
+    }
+
+    return frases;
   },
 };
