@@ -1,6 +1,6 @@
 /* ===========================================================
    BienEstar PYME — Layout del shell de la aplicacion
-   =========================================================== */
+=========================================================== */
 
 #app {
   display: none;
@@ -27,38 +27,45 @@
   align-items: center;
   gap: var(--space-sm);
   padding: 0 var(--space-lg) var(--space-lg);
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  border-bottom: 1px solid var(--color-sidebar-border);
   margin-bottom: var(--space-md);
   color: #fff;
   font-size: var(--fs-lg);
-  font-weight: 800;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
-.sidebar__brand span { color: var(--color-success); }
+.sidebar__brand span { color: #818cf8; }
 
 .sidebar__nav {
   display: flex;
   flex-direction: column;
   gap: 2px;
   flex: 1;
+  padding: 0 var(--space-sm);
 }
 
 .sidebar__link {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
-  padding: 12px var(--space-lg);
-  border-left: 3px solid transparent;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
   font-size: var(--fs-sm);
   font-weight: 500;
   color: var(--color-sidebar-text);
   transition: var(--transition);
   background: none;
-  border-top: none;
-  border-right: none;
-  border-bottom: none;
+  border: none;
   width: 100%;
   text-align: left;
+}
+
+.sidebar__link svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  opacity: 0.85;
 }
 
 .sidebar__link:hover {
@@ -66,23 +73,31 @@
   color: #fff;
 }
 
+.sidebar__link:focus-visible {
+  outline: 2px solid #818cf8;
+  outline-offset: 2px;
+}
+
 .sidebar__link.active {
-  background: var(--color-sidebar-active);
-  border-left-color: var(--color-success);
+  background: var(--color-primary);
   color: #fff;
 }
 
+.sidebar__link.active svg { opacity: 1; }
+
 .sidebar__footer {
-  border-top: 1px solid rgba(255,255,255,0.08);
+  border-top: 1px solid var(--color-sidebar-border);
   padding-top: var(--space-md);
   margin-top: var(--space-md);
+  padding-left: var(--space-sm);
+  padding-right: var(--space-sm);
 }
 
 .sidebar__user {
   display: flex;
   align-items: center;
   gap: var(--space-sm);
-  padding: 0 var(--space-lg) var(--space-md);
+  padding: 0 var(--space-md) var(--space-md);
   font-size: var(--fs-xs);
 }
 
@@ -101,7 +116,7 @@
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  background: var(--color-primary);
+  background: linear-gradient(135deg, var(--color-primary), #818cf8);
   color: #fff;
   display: flex;
   align-items: center;
@@ -134,6 +149,8 @@
 
 .topbar__title h1 {
   font-size: var(--fs-lg);
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 .topbar__meta {
@@ -154,11 +171,19 @@
 
 .menu-toggle {
   display: none;
+  align-items: center;
+  justify-content: center;
   background: none;
   border: none;
-  font-size: 22px;
   color: var(--color-text);
+  border-radius: var(--radius-sm);
+  width: 34px;
+  height: 34px;
 }
+
+.menu-toggle svg { width: 20px; height: 20px; }
+
+.menu-toggle:hover { background: var(--color-bg); }
 
 /* ---------- Contenido principal ---------- */
 .content {
@@ -215,7 +240,7 @@
     z-index: 100;
   }
   .sidebar.open { transform: translateX(0); }
-  .menu-toggle { display: block; }
+  .menu-toggle { display: flex; }
   .grid-kpis { grid-template-columns: 1fr; }
   .content { padding: var(--space-md); }
 }
