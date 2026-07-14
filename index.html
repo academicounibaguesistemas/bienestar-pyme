@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BienEstar PYME — Gestión del bienestar laboral y la productividad</title>
 
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%234f46e5'/%3E%3Cpath d='M12 17.5l-5.5-5a3 3 0 1 1 4.6-3.8L12 9.4l.9-.7a3 3 0 1 1 4.6 3.8z' fill='white'/%3E%3C/svg%3E">
+
+<!-- Tipografia Inter (Google Fonts), referenciada en variables.css como --font-base. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
 <link rel="stylesheet" href="css/variables.css">
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/layout.css">
@@ -18,187 +25,215 @@
 
 <!-- ============ PANTALLA DE ACCESO ============ -->
 <div id="login">
-  <div class="login-card">
-    <div class="login-card__logo">BienEstar<span> PYME</span></div>
-    <div class="login-card__sub">Gestión del bienestar laboral y la productividad</div>
+<div class="login-card">
+<div class="login-card__logo">BienEstar<span> PYME</span></div>
+<div class="login-card__sub">Gestión del bienestar laboral y la productividad</div>
 
-    <form id="loginForm">
-      <div class="field">
-        <label>Correo corporativo</label>
-        <input id="loginUser" type="email" placeholder="admin@pyme.co" value="admin@pyme.co">
-      </div>
-      <div class="field">
-        <label>Contraseña</label>
-        <input id="loginPass" type="password" placeholder="********" value="demo1234">
-      </div>
-      <div class="field">
-        <label>Rol</label>
-        <select id="loginRol">
-          <option>Administrador</option>
-          <option>Gerente / Líder</option>
-          <option>Colaborador</option>
-        </select>
-      </div>
-      <button type="submit" class="btn btn-primary btn-block">Ingresar</button>
-    </form>
+<form id="loginForm">
+<div class="field">
+<label for="loginUser">Correo corporativo</label>
+<input id="loginUser" type="email" placeholder="admin@pyme.co" value="admin@pyme.co">
+</div>
+<div class="field">
+<label for="loginPass">Contraseña</label>
+<input id="loginPass" type="password" placeholder="********" value="demo1234">
+</div>
+<div class="field">
+<label for="loginRol">Rol</label>
+<select id="loginRol">
+<option>Administrador</option>
+<option>Gerente / Líder</option>
+<option>Colaborador</option>
+</select>
+</div>
+<button type="submit" class="btn btn-primary btn-block">Ingresar</button>
+</form>
 
-    <div class="login-card__hint">Prototipo de demostración · datos simulados · cualquier credencial funciona</div>
-  </div>
+<div class="login-card__hint">Prototipo de demostración · datos simulados · cualquier credencial funciona</div>
+</div>
 </div>
 
 <!-- ============ SHELL DE LA APLICACION ============ -->
 <div id="app">
-  <div class="overlay" id="overlay"></div>
+<div class="overlay" id="overlay"></div>
 
-  <nav class="sidebar" id="sidebar">
-    <div class="sidebar__brand">BienEstar<span> PYME</span></div>
+<nav class="sidebar" id="sidebar">
+<div class="sidebar__brand">BienEstar<span> PYME</span></div>
 
-    <div class="sidebar__nav">
-      <button class="sidebar__link active" data-view="dash">📊 Tablero</button>
-      <button class="sidebar__link" data-view="enc">📝 Encuestas de bienestar</button>
-      <button class="sidebar__link" data-view="rep">📈 Reportes y alertas</button>
-      <button class="sidebar__link" data-view="cfg">⚙️ Configuración</button>
-    </div>
+<div class="sidebar__nav">
+<button class="sidebar__link active" data-view="dash">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+Tablero
+</button>
+<button class="sidebar__link" data-view="enc">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"></rect><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path></svg>
+Encuestas de bienestar
+</button>
+<button class="sidebar__link" data-view="rep">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+Reportes y alertas
+</button>
+<button class="sidebar__link" data-view="cfg">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+Configuración
+</button>
+</div>
 
-    <div class="sidebar__footer">
-      <div class="sidebar__user">
-        <div class="avatar" id="userAvatar">AD</div>
-        <div>
-          <div id="userNombre" class="sidebar__user-name">admin@pyme.co</div>
-          <div id="userRol" class="text-muted sidebar__user-role">Administrador</div>
-        </div>
-      </div>
-      <button class="sidebar__link" id="btnLogout">↩ Cerrar sesión</button>
-    </div>
-  </nav>
+<div class="sidebar__footer">
+<div class="sidebar__user">
+<div class="avatar" id="userAvatar">AD</div>
+<div>
+<div id="userNombre" class="sidebar__user-name">admin@pyme.co</div>
+<div id="userRol" class="text-muted sidebar__user-role">Administrador</div>
+</div>
+</div>
+<button class="sidebar__link" id="btnLogout">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+Cerrar sesión
+</button>
+</div>
+</nav>
 
-  <div>
-    <header class="topbar">
-      <div class="topbar__left">
-        <button class="menu-toggle" id="menuToggle">☰</button>
-        <div class="topbar__title">
-          <h1 id="titulo">Tablero de indicadores</h1>
-        </div>
-      </div>
-      <div class="topbar__right">
-        <div class="topbar__info">
-          <div class="topbar__meta" id="empinfo">Empresa demo · Ibagué · 48 colaboradores</div>
-          <div class="topbar__meta" id="fecha"></div>
-        </div>
-      </div>
-    </header>
+<div>
+<header class="topbar">
+<div class="topbar__left">
+<button class="menu-toggle" id="menuToggle">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+</button>
+<div class="topbar__title">
+<h1 id="titulo">Tablero de indicadores</h1>
+</div>
+</div>
+<div class="topbar__right">
+<div class="topbar__info">
+<div class="topbar__meta" id="empinfo">Empresa demo · Ibagué · 48 colaboradores</div>
+<div class="topbar__meta" id="fecha"></div>
+</div>
+</div>
+</header>
 
-    <main class="content">
+<main class="content">
 
-      <!-- ===== TABLERO ===== -->
-      <section id="dash" class="view active">
-        <div class="grid-kpis">
-          <div class="kpi">
-            <div class="kpi__icon">💙</div>
-            <div class="kpi__label">Índice de bienestar</div>
-            <div class="kpi__value" id="k1">–</div>
-            <div class="kpi__delta" id="k1d"></div>
-          </div>
-          <div class="kpi">
-            <div class="kpi__icon">🌤️</div>
-            <div class="kpi__label">Clima organizacional</div>
-            <div class="kpi__value" id="k2">–</div>
-            <div class="kpi__delta" id="k2d"></div>
-          </div>
-          <div class="kpi">
-            <div class="kpi__icon">📈</div>
-            <div class="kpi__label">Productividad</div>
-            <div class="kpi__value" id="k3">–</div>
-            <div class="kpi__delta" id="k3d"></div>
-          </div>
-          <div class="kpi">
-            <div class="kpi__icon">⚠️</div>
-            <div class="kpi__label">Riesgo psicosocial</div>
-            <div class="kpi__value" id="k4">–</div>
-            <div class="kpi__delta" id="k4d"></div>
-          </div>
-        </div>
+<!-- ===== TABLERO ===== -->
+<section id="dash" class="view active">
+<div class="grid-kpis">
+<div class="kpi">
+<div class="kpi__icon">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+</div>
+<div class="kpi__label">Índice de bienestar</div>
+<div class="kpi__value" id="k1">–</div>
+<div class="kpi__delta" id="k1d"></div>
+</div>
+<div class="kpi">
+<div class="kpi__icon kpi__icon--warning">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+</div>
+<div class="kpi__label">Clima organizacional</div>
+<div class="kpi__value" id="k2">–</div>
+<div class="kpi__delta" id="k2d"></div>
+</div>
+<div class="kpi">
+<div class="kpi__icon kpi__icon--success">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+</div>
+<div class="kpi__label">Productividad</div>
+<div class="kpi__value" id="k3">–</div>
+<div class="kpi__delta" id="k3d"></div>
+</div>
+<div class="kpi">
+<div class="kpi__icon kpi__icon--danger">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+</div>
+<div class="kpi__label">Riesgo psicosocial</div>
+<div class="kpi__value" id="k4">–</div>
+<div class="kpi__delta" id="k4d"></div>
+</div>
+</div>
 
-        <div class="grid-2">
-          <div class="card">
-            <h3>Evolución del bienestar y la productividad</h3>
-            <canvas id="chLine" height="150"></canvas>
-          </div>
-          <div class="card">
-            <h3>Bienestar por área</h3>
-            <canvas id="chBar" height="150"></canvas>
-          </div>
-        </div>
+<div class="grid-2">
+<div class="card">
+<h3>Evolución del bienestar y la productividad</h3>
+<canvas id="chLine" height="150"></canvas>
+</div>
+<div class="card">
+<h3>Bienestar por área</h3>
+<canvas id="chBar" height="150"></canvas>
+</div>
+</div>
 
-        <div class="grid-2">
-          <div class="card">
-            <h3>Distribución del riesgo psicosocial</h3>
-            <canvas id="chDon" height="150"></canvas>
-          </div>
-          <div class="card">
-            <h3>Alertas recientes</h3>
-            <table id="tAlert">
-              <thead><tr><th>Área</th><th>Indicador</th><th>Estado</th></tr></thead>
-              <tbody></tbody>
-            </table>
-          </div>
-        </div>
-      </section>
+<div class="grid-2">
+<div class="card">
+<h3>Distribución del riesgo psicosocial</h3>
+<canvas id="chDon" height="150"></canvas>
+</div>
+<div class="card">
+<h3>Alertas recientes</h3>
+<table id="tAlert">
+<thead><tr><th>Área</th><th>Indicador</th><th>Estado</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+</div>
+</section>
 
-      <!-- ===== ENCUESTAS ===== -->
-      <section id="enc" class="view">
-        <div class="card card--wide">
-          <h3>Encuesta de bienestar laboral (escala 1 a 5)</h3>
+<!-- ===== ENCUESTAS ===== -->
+<section id="enc" class="view">
+<div class="card card--wide">
+<h3>Encuesta de bienestar laboral (escala 1 a 5)</h3>
 
-          <div class="progress-bar"><div class="progress-bar__fill" id="encuestaProgreso"></div></div>
-          <div class="text-muted progress-label" id="encuestaProgresoLabel"></div>
+<div class="progress-bar"><div class="progress-bar__fill" id="encuestaProgreso"></div></div>
+<div class="text-muted progress-label" id="encuestaProgresoLabel"></div>
 
-          <form id="formEncuesta"></form>
-          <button type="submit" form="formEncuesta" class="btn btn-primary mt-md">Enviar respuesta</button>
-        </div>
-      </section>
+<form id="formEncuesta"></form>
+<button type="submit" form="formEncuesta" class="btn btn-primary mt-md">Enviar respuesta</button>
+</div>
+</section>
 
-      <!-- ===== REPORTES ===== -->
-      <section id="rep" class="view">
-        <div class="card" id="panelReporte">
-          <h3>Reporte consolidado por área</h3>
-          <table id="tReporte">
-            <thead><tr><th>Área</th><th>Bienestar</th><th>Clima</th><th>Productividad</th><th>Rotación</th><th>Estado</th></tr></thead>
-            <tbody></tbody>
-          </table>
-        </div>
-        <button class="btn btn-primary mt-md" id="btnExportarPDF">🖨 Exportar / Imprimir PDF</button>
-      </section>
+<!-- ===== REPORTES ===== -->
+<section id="rep" class="view">
+<div class="card" id="panelReporte">
+<h3>Reporte consolidado por área</h3>
+<table id="tReporte">
+<thead><tr><th>Área</th><th>Bienestar</th><th>Clima</th><th>Productividad</th><th>Rotación</th><th>Estado</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+<button class="btn btn-primary mt-md" id="btnExportarPDF">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+Exportar / Imprimir PDF
+</button>
+</section>
 
-      <!-- ===== CONFIGURACION ===== -->
-      <section id="cfg" class="view">
-        <div class="card card--form">
-          <h3>Configuración de la empresa</h3>
-          <form id="formConfiguracion">
-            <div class="field">
-              <label>Nombre de la empresa</label>
-              <input id="cfgNombre">
-            </div>
-            <div class="field">
-              <label>Número de colaboradores</label>
-              <input id="cfgColaboradores" type="number">
-            </div>
-            <div class="field">
-              <label>Periodicidad de medición</label>
-              <select id="cfgPeriodicidad">
-                <option>Mensual</option>
-                <option>Trimestral</option>
-                <option>Semestral</option>
-              </select>
-            </div>
-            <button type="submit" class="btn btn-primary">Guardar</button>
-          </form>
-        </div>
-      </section>
+<!-- ===== CONFIGURACION ===== -->
+<section id="cfg" class="view">
+<div class="card card--form">
+<h3>Configuración de la empresa</h3>
+<form id="formConfiguracion">
+<div class="field">
+<label for="cfgNombre">Nombre de la empresa</label>
+<input id="cfgNombre">
+</div>
+<div class="field">
+<label for="cfgColaboradores">Número de colaboradores</label>
+<input id="cfgColaboradores" type="number">
+</div>
+<div class="field">
+<label for="cfgPeriodicidad">Periodicidad de medición</label>
+<select id="cfgPeriodicidad">
+<option>Mensual</option>
+<option>Trimestral</option>
+<option>Semestral</option>
+</select>
+</div>
+<button type="submit" class="btn btn-primary">Guardar</button>
+</form>
+</div>
+</section>
 
-      <div class="footer-note">BienEstar PYME · Prototipo funcional del trabajo de grado · Muñoz Realpe &amp; Lozano Tafur · 2026</div>
-    </main>
-  </div>
+<div class="footer-note">BienEstar PYME · Prototipo funcional del trabajo de grado · Muñoz Realpe &amp; Lozano Tafur · 2026</div>
+</main>
+</div>
 </div>
 
 <div id="toast-container"></div>
