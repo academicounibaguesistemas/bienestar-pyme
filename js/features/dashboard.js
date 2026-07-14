@@ -42,7 +42,7 @@ const Dashboard = {
       <tr>
         <td>${a.area}</td>
         <td>${a.indicador}</td>
-        <td><span class="badge ${claseBadge(a.estado)}">${etiquetaEstado(a.estado)}</span></td>
+        <td>${badgeHTML(a.estado)}</td>
       </tr>
     `).join("");
   },
