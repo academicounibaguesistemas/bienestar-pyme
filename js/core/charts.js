@@ -12,6 +12,14 @@
  * exista ninguna encuesta real, se usa BIENESTAR_POR_AREA (datos de
  * demostracion definidos en data.js) para que el prototipo no se vea
  * vacio.
+ *
+ * Sprint 4B agrega dos graficas de barras adicionales con el mismo
+ * estilo: "Bienestar por cargo" y "Bienestar por antiguedad", usando
+ * IndicadoresPorCargo e IndicadoresPorAntiguedad (ver indicadores.js).
+ * A diferencia de la grafica por area, estas dos no tienen datos de
+ * demostracion: mientras no haya encuestas reales con cargo o con
+ * antiguedad registrados, simplemente no se dibujan (no se simula
+ * informacion bajo ninguna circunstancia).
  */
 
 const Charts = {
@@ -97,6 +105,76 @@ const Charts = {
     });
   },
 
+  /**
+   * Grafica de barras: bienestar por cargo (Sprint 4B). Mismo patron que
+   * renderBarChart, pero a partir de IndicadoresPorCargo. Solo se pintan
+   * los cargos que ya tienen encuestas reales; si ninguno las tiene, no
+   * se crea la grafica (no se simula informacion por cargo).
+   */
+  renderBarChartCargo() {
+    const ctx = document.getElementById("chBarCargo");
+    if (!ctx) return;
+    if (this.instancias.barCargo) this.instancias.barCargo.destroy();
+
+    const porCargo = IndicadoresPorCargo.calcular();
+    if (!porCargo.length) return;
+
+    const datos = Object.fromEntries(porCargo.map(c => [c.cargo, c.bienestar]));
+    const paleta = this.paleta();
+
+    this.instancias.barCargo = new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: Object.keys(datos),
+        datasets: [{
+          data: Object.values(datos),
+          backgroundColor: Object.keys(datos).map((_, i) => paleta[i % paleta.length]),
+          borderRadius: 6,
+        }],
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { y: { suggestedMin: 0, suggestedMax: 100 } },
+      },
+    });
+  },
+
+  /**
+   * Grafica de barras: bienestar por antiguedad (Sprint 4B). Mismo patron
+   * que renderBarChartCargo, pero a partir de IndicadoresPorAntiguedad
+   * (ya ordenado cronologicamente). Solo se pintan los grupos de
+   * antiguedad que ya tienen encuestas reales.
+   */
+  renderBarChartAntiguedad() {
+    const ctx = document.getElementById("chBarAntiguedad");
+    if (!ctx) return;
+    if (this.instancias.barAntiguedad) this.instancias.barAntiguedad.destroy();
+
+    const porAntiguedad = IndicadoresPorAntiguedad.calcular();
+    if (!porAntiguedad.length) return;
+
+    const datos = Object.fromEntries(porAntiguedad.map(a => [a.antiguedad, a.bienestar]));
+    const paleta = this.paleta();
+
+    this.instancias.barAntiguedad = new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: Object.keys(datos),
+        datasets: [{
+          data: Object.values(datos),
+          backgroundColor: Object.keys(datos).map((_, i) => paleta[i % paleta.length]),
+          borderRadius: 6,
+        }],
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { y: { suggestedMin: 0, suggestedMax: 100 } },
+      },
+    });
+  },
+
   /** Grafica de dona: distribucion del riesgo psicosocial. */
   renderDonutChart() {
     const ctx = document.getElementById("chDon");
@@ -127,5 +205,7 @@ const Charts = {
     this.renderLineChart();
     this.renderBarChart();
     this.renderDonutChart();
+    this.renderBarChartCargo();
+    this.renderBarChartAntiguedad();
   },
 };
