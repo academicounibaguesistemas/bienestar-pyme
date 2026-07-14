@@ -29,7 +29,9 @@
  * (AlertasPorArea), todo calculado a partir del campo "area" que ya
  * captura la encuesta (ver data.js). Mientras un area no tenga encuestas
  * registradas, simplemente no aparece en estos calculos: no se simula
- * informacion por area bajo ninguna circunstancia.
+ * informacion por area bajo ninguna circunstancia. Las encuestas
+ * registradas antes del Sprint 3 (que no guardaron area) tampoco se
+ * incluyen en el desglose por area, para no mostrar una area "vacia".
  */
 
 const Indicadores = {
@@ -201,11 +203,13 @@ const IndicadoresPorArea = {
    * Agrupa las encuestas guardadas por el campo "area" (tal como lo
    * selecciono el colaborador al responder) y calcula los 4 indicadores
    * para cada area que tenga al menos una encuesta real. Las areas sin
-   * respuestas registradas no se incluyen: nunca se simula informacion
-   * por area. Devuelve un arreglo ordenado de mayor a menor bienestar.
+   * respuestas registradas no se incluyen, y las encuestas antiguas que
+   * no capturaron area (previas al Sprint 3) se ignoran en este calculo:
+   * nunca se simula informacion por area. Devuelve un arreglo ordenado
+   * de mayor a menor bienestar.
    */
   calcular() {
-    const encuestas = DataStore.getEncuestasGuardadas();
+    const encuestas = DataStore.getEncuestasGuardadas().filter(e => !!e.area);
     if (!encuestas.length) return [];
 
     const grupos = {};
