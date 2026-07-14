@@ -40,6 +40,9 @@ h1, h2, h3, h4 { font-weight: 700; line-height: 1.2; }
 
 .text-muted { color: var(--color-text-muted); }
 
+/* Utilidad de espaciado reutilizable (antes definida con style="" en linea en botones/formularios). */
+.mt-md { margin-top: var(--space-md); }
+
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
