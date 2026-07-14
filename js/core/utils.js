@@ -62,3 +62,62 @@ function crearElemento(tag, className, html) {
   if (html !== undefined) el.innerHTML = html;
   return el;
 }
+
+
+/* ---------- Sprint 6: semaforo y tendencia entre periodos ---------- */
+
+/**
+* Determina el estado tipo semaforo (ok/warn/danger) de un indicador a
+* partir de rangos configurables. "invertido" se usa para indicadores
+* donde un valor mas alto es peor (ej. riesgo psicosocial): en ese caso
+* se evalua sobre (100 - valor) antes de compararlo con los umbrales.
+*/
+function estadoSemaforo(valor, invertido = false, umbralExcelente = 75, umbralAceptable = 60) {
+  const v = invertido ? 100 - valor : valor;
+  if (v >= umbralExcelente) return "ok";
+  if (v >= umbralAceptable) return "warn";
+  return "danger";
+}
+
+/** Texto con emoji para el estado tipo semaforo (distinto de etiquetaEstado, usado en los badges generales). */
+function textoEstadoSemaforo(estado) {
+  return { ok: "🟢 Estado: Excelente", warn: "🟡 Estado: Aceptable", danger: "🔴 Estado: Crítico" }[estado] || estado;
+}
+
+/**
+* Badge completo tipo semaforo (emoji + "Estado: ..."), reutilizando la
+* clase ".badge" y claseBadge() ya existentes: no agrega estilos nuevos.
+*/
+function semaforoHTML(valor, invertido = false, umbralExcelente = 75, umbralAceptable = 60) {
+  const estado = estadoSemaforo(valor, invertido, umbralExcelente, umbralAceptable);
+  return '<span class="badge ' + claseBadge(estado) + '">' + textoEstadoSemaforo(estado) + '</span>';
+}
+
+/**
+* Estado (ok/warn/danger) de una variacion entre periodos: verde si
+* mejora, rojo si empeora, amarillo si no hay cambio. "invertido" se usa
+* para indicadores donde subir es peor (ej. riesgo psicosocial).
+*/
+function estadoTendencia(diferencia, invertido = false) {
+  const dif = invertido ? -diferencia : diferencia;
+  if (dif > 0) return "ok";
+  if (dif < 0) return "danger";
+  return "warn";
+}
+
+/** Flecha de tendencia segun el signo de la diferencia (independiente de si es buena o mala). */
+function flechaTendencia(diferencia) {
+  if (diferencia > 0) return "↑";
+  if (diferencia < 0) return "↓";
+  return "→";
+}
+
+/** Texto legible para el estado de una tendencia entre periodos. */
+function textoTendenciaEstado(estado) {
+  return { ok: "Mejora", warn: "Sin cambios", danger: "Empeora" }[estado] || estado;
+}
+
+/** Badge de tendencia (flecha + texto), reutilizando la clase ".badge" existente. */
+function tendenciaHTML(estado, flecha) {
+  return '<span class="badge ' + claseBadge(estado) + '">' + flecha + ' ' + textoTendenciaEstado(estado) + '</span>';
+}
