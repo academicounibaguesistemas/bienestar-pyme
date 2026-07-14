@@ -26,6 +26,6 @@ const Configuracion = {
     document.getElementById("empinfo").textContent =
       `${empresa.nombre} · ${empresa.ciudad} · ${empresa.colaboradores} colaboradores`;
 
-    mostrarToast("Configuracion guardada correctamente.");
+    mostrarToast("Configuración guardada correctamente.");
   },
 };
