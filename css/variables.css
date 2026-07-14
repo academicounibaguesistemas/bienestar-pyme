@@ -1,0 +1,55 @@
+/* ===========================================================
+   BienEstar PYME — Design Tokens
+   Paleta corporativa, tipografia y variables globales de estilo.
+   =========================================================== */
+:root {
+  /* Colores de marca */
+  --color-primary: #2563eb;
+  --color-primary-dark: #1e3a8a;
+  --color-primary-light: #dbeafe;
+
+  /* Colores de estado */
+  --color-success: #16a34a;
+  --color-success-bg: #dcfce7;
+  --color-warning: #d97706;
+  --color-warning-bg: #fef3c7;
+  --color-danger: #dc2626;
+  --color-danger-bg: #fee2e2;
+
+  /* Neutros */
+  --color-bg: #f4f6fb;
+  --color-surface: #ffffff;
+  --color-border: #e2e8f0;
+  --color-text: #0f172a;
+  --color-text-muted: #64748b;
+  --color-sidebar-bg: #0f1f3d;
+  --color-sidebar-text: #b9c4dd;
+  --color-sidebar-active: #16305c;
+
+  /* Tipografia */
+  --font-base: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.85rem;
+  --fs-md: 0.95rem;
+  --fs-lg: 1.15rem;
+  --fs-xl: 1.5rem;
+
+  /* Espaciado */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+
+  /* Bordes y sombras */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 6px 20px rgba(15, 23, 42, 0.08);
+
+  /* Layout */
+  --sidebar-width: 250px;
+  --topbar-height: 64px;
+  --transition: all 0.2s ease;
+}
