@@ -218,15 +218,39 @@ Exportar / Imprimir PDF
 <!-- ===== CONFIGURACION ===== -->
 <section id="cfg" class="view">
 <div class="card card--form">
-<h3>Configuración de la empresa</h3>
+<h3>Información de la empresa</h3>
 <form id="formConfiguracion">
 <div class="field">
 <label for="cfgNombre">Nombre de la empresa</label>
 <input id="cfgNombre">
 </div>
 <div class="field">
+<label for="cfgNit">NIT</label>
+<input id="cfgNit">
+</div>
+<div class="field">
+<label for="cfgSector">Sector económico</label>
+<input id="cfgSector">
+</div>
+<div class="field">
 <label for="cfgColaboradores">Número de colaboradores</label>
 <input id="cfgColaboradores" type="number">
+</div>
+<div class="field">
+<label for="cfgCiudad">Ciudad</label>
+<input id="cfgCiudad">
+</div>
+<div class="field">
+<label for="cfgResponsable">Responsable del sistema</label>
+<input id="cfgResponsable">
+</div>
+<div class="field">
+<label for="cfgCorreo">Correo electrónico</label>
+<input id="cfgCorreo" type="email">
+</div>
+<div class="field">
+<label for="cfgTelefono">Teléfono</label>
+<input id="cfgTelefono">
 </div>
 <div class="field">
 <label for="cfgPeriodicidad">Periodicidad de medición</label>
@@ -236,9 +260,22 @@ Exportar / Imprimir PDF
 <option>Semestral</option>
 </select>
 </div>
+<div class="field">
+<label for="cfgLogoUrl">Logo de la empresa (URL de una imagen, opcional)</label>
+<div style="display:flex;align-items:center;gap:12px;">
+<div class="avatar" id="cfgLogoPreview">EP</div>
+<input id="cfgLogoUrl" placeholder="https://..." style="flex:1;">
+</div>
+</div>
 <button type="submit" class="btn btn-primary">Guardar</button>
 </form>
 </div>
+
+<div class="card card--form mt-md" id="panelUsuarios"></div>
+
+<div class="card card--form mt-md" id="panelAreas"></div>
+
+<div class="card card--form mt-md" id="panelPeriodos"></div>
 </section>
 
 <div class="footer-note">BienEstar PYME · Prototipo funcional del trabajo de grado · Muñoz Realpe &amp; Lozano Tafur · 2026</div>
