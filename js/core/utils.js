@@ -29,8 +29,8 @@ function fechaLarga(date = new Date()) {
 /** Devuelve las iniciales de un nombre/correo para usarlas en un avatar. */
 function iniciales(texto) {
   const base = texto.includes("@") ? texto.split("@")[0] : texto;
-  return base.split(/[.s]/).filter(Boolean).map(p => p[0]).join("").slice(0, 2).toUpperCase();
-}
+  return base.split(/[.\s]+/).filter(Boolean).map(p => p[0]).join("").slice(0, 2).toUpperCase();
+}  
 
 /** Determina el estado (ok/warn/danger) de un indicador segun umbrales. */
 function estadoPorValor(valor, umbralBueno = 75, umbralMedio = 65) {
