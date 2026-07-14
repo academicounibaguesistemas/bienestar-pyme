@@ -3,10 +3,11 @@
  * Logica del modulo "Reportes y alertas": pinta el reporte consolidado
  * de la empresa (calculado dinamicamente por Indicadores a partir de las
  * encuestas guardadas en localStorage), el desglose real de indicadores
- * por area con su ranking ejecutivo (Sprint 4A, ver indicadores.js), las
- * alertas activas (generales y por area) y genera un PDF de ese panel
- * usando html2pdf.js (libreria ligera cargada via CDN en index.html).
- * El desglose por cargo o antiguedad queda para un proximo sprint.
+ * por area, cargo y antiguedad con su ranking ejecutivo (Sprint 4A y
+ * Sprint 4B, ver indicadores.js), el resumen de hallazgos principales
+ * generado automaticamente (HallazgosPrincipales), las alertas activas
+ * (generales y por area) y genera un PDF de ese panel usando html2pdf.js
+ * (libreria ligera cargada via CDN en index.html).
  */
 
 const Reportes = {
@@ -16,7 +17,12 @@ const Reportes = {
 
     const info = Indicadores.calcularIndicadoresActuales();
     const porArea = IndicadoresPorArea.calcular();
-    const ranking = RankingAreas.calcular();
+    const rankingArea = RankingAreas.calcular();
+    const porCargo = IndicadoresPorCargo.calcular();
+    const rankingCargo = RankingCargos.calcular();
+    const porAntiguedad = IndicadoresPorAntiguedad.calcular();
+    const rankingAntiguedad = RankingAntiguedad.calcular();
+    const hallazgos = HallazgosPrincipales.generar();
     const alertas = [...Alertas.generar(), ...AlertasPorArea.generar()];
 
     panel.innerHTML = `
@@ -34,8 +40,19 @@ const Reportes = {
       </p>
 
       <h3 class="mt-md">Indicadores por área</h3>
-      ${this.tablaAreasHTML(porArea)}
-      ${ranking ? this.rankingHTML(ranking) : ""}
+      ${this.tablaIndicadoresHTML(porArea, "area", "Área", "tAreas", "Aún no hay encuestas con área registrada para calcular indicadores por área.")}
+      ${rankingArea ? this.rankingIndicadoresHTML(rankingArea, "area") : ""}
+
+      <h3 class="mt-md">Indicadores por Cargo</h3>
+      ${this.tablaIndicadoresHTML(porCargo, "cargo", "Cargo", "tCargos", "Aún no hay encuestas con cargo registrado para calcular indicadores por cargo.")}
+      ${rankingCargo ? this.rankingIndicadoresHTML(rankingCargo, "cargo") : ""}
+
+      <h3 class="mt-md">Indicadores por Antigüedad</h3>
+      ${this.tablaIndicadoresHTML(porAntiguedad, "antiguedad", "Antigüedad", "tAntiguedad", "Aún no hay encuestas con antigüedad registrada para calcular indicadores por antigüedad.")}
+      ${rankingAntiguedad ? this.rankingIndicadoresHTML(rankingAntiguedad, "antiguedad") : ""}
+
+      <h3 class="mt-md">Hallazgos principales</h3>
+      ${this.hallazgosHTML(hallazgos)}
 
       <h3 class="mt-md">Alertas activas</h3>
       <table id="tAlertReporte">
@@ -67,30 +84,32 @@ const Reportes = {
   },
 
   /**
-   * Tabla "Indicadores por Área" (Sprint 4A): una fila por cada area con
-   * encuestas reales, ordenada de mayor a menor bienestar. Si aun no hay
-   * ninguna encuesta con area registrada, muestra un mensaje en su lugar
-   * en vez de simular informacion.
+   * Tabla generica de "Indicadores por ..." (Sprint 4A/4B): una fila por
+   * cada grupo (area, cargo o antiguedad) que ya tenga encuestas reales.
+   * Reutilizada por las 3 secciones de desglose para no repetir el mismo
+   * marcado de tabla tres veces. Si el grupo aun no tiene ninguna
+   * encuesta registrada, muestra "mensajeVacio" en su lugar en vez de
+   * simular informacion.
    */
-  tablaAreasHTML(porArea) {
-    if (!porArea.length) {
-      return `<p class="text-muted">Aún no hay encuestas con área registrada para calcular indicadores por área.</p>`;
+  tablaIndicadoresHTML(lista, campo, etiquetaColumna, idTabla, mensajeVacio) {
+    if (!lista.length) {
+      return `<p class="text-muted">${mensajeVacio}</p>`;
     }
 
     return `
-      <table id="tAreas">
+      <table id="${idTabla}">
         <thead>
-          <tr><th>Área</th><th>Encuestas</th><th>Bienestar</th><th>Clima</th><th>Productividad</th><th>Riesgo</th></tr>
+          <tr><th>${etiquetaColumna}</th><th>Encuestas</th><th>Bienestar</th><th>Clima</th><th>Productividad</th><th>Riesgo</th></tr>
         </thead>
         <tbody>
-          ${porArea.map(a => `
+          ${lista.map(item => `
             <tr>
-              <td>${a.area}</td>
-              <td>${a.totalEncuestas}</td>
-              <td>${a.bienestar}</td>
-              <td>${a.clima}</td>
-              <td>${a.productividad}</td>
-              <td>${a.riesgo}%</td>
+              <td>${item[campo]}</td>
+              <td>${item.totalEncuestas}</td>
+              <td>${item.bienestar}</td>
+              <td>${item.clima}</td>
+              <td>${item.productividad}</td>
+              <td>${item.riesgo}%</td>
             </tr>
           `).join("")}
         </tbody>
@@ -99,15 +118,17 @@ const Reportes = {
   },
 
   /**
-   * Resumen ejecutivo con el area destacada en cada indicador (Sprint 4A),
-   * reutilizando la misma tarjeta ".kpi" del resto del panel.
+   * Resumen ejecutivo generico con el grupo destacado en cada indicador
+   * (Sprint 4A/4B), reutilizando la misma tarjeta ".kpi" del resto del
+   * panel. "campo" indica el nombre del grupo (area, cargo o antiguedad)
+   * dentro de cada elemento del ranking.
    */
-  rankingHTML(ranking) {
-    const tarjeta = (etiqueta, item, campo, sufijo = "") => `
+  rankingIndicadoresHTML(ranking, campo) {
+    const tarjeta = (etiqueta, item, indicador, sufijo = "") => `
       <div class="kpi">
         <div class="kpi__label">${etiqueta}</div>
-        <div class="kpi__value">${item[campo]}${sufijo}</div>
-        <div class="kpi__delta">${item.area}</div>
+        <div class="kpi__value">${item[indicador]}${sufijo}</div>
+        <div class="kpi__delta">${item[campo]}</div>
       </div>
     `;
 
@@ -119,6 +140,19 @@ const Reportes = {
         ${tarjeta("Mejor productividad", ranking.mejorProductividad, "productividad")}
       </div>
     `;
+  },
+
+  /**
+   * Bloque "Hallazgos principales" (Sprint 4B): lista las frases
+   * generadas automaticamente por HallazgosPrincipales a partir de los
+   * rankings por cargo y antiguedad. Se pintan como parrafos simples,
+   * sin agregar clases ni estilos nuevos.
+   */
+  hallazgosHTML(frases) {
+    if (!frases.length) {
+      return `<p class="text-muted">Aún no hay suficientes encuestas con cargo y antigüedad registrados para generar hallazgos.</p>`;
+    }
+    return frases.map(f => `<p>${f}</p>`).join("");
   },
 
   /** Exporta el panel del reporte consolidado a un archivo PDF. */
