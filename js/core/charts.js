@@ -31,14 +31,14 @@ const Charts = {
   },
 
   /** Grafica de lineas: evolucion de bienestar y productividad. */
-  renderLineChart() {
-    const ctx = document.getElementById("chLine");
+  renderLineChart(canvasId = "chLine", key = "line") {
+    const ctx = document.getElementById(canvasId);
     if (!ctx) return;
-    if (this.instancias.line) this.instancias.line.destroy();
+    if (this.instancias[key]) this.instancias[key].destroy();
 
     const serie = SerieHistorica.calcular();
 
-    this.instancias.line = new Chart(ctx, {
+    this.instancias[key] = new Chart(ctx, {
       type: "line",
       data: {
         labels: serie.labels,
@@ -75,10 +75,10 @@ const Charts = {
    * aparecen las areas que efectivamente tienen respuestas. Mientras no
    * exista ninguna encuesta real, muestra los datos de demostracion.
    */
-  renderBarChart() {
-    const ctx = document.getElementById("chBar");
+  renderBarChart(canvasId = "chBar", key = "bar") {
+    const ctx = document.getElementById(canvasId);
     if (!ctx) return;
-    if (this.instancias.bar) this.instancias.bar.destroy();
+    if (this.instancias[key]) this.instancias[key].destroy();
 
     const porArea = IndicadoresPorArea.calcular();
     const datos = porArea.length
@@ -87,7 +87,7 @@ const Charts = {
 
     const paleta = this.paleta();
 
-    this.instancias.bar = new Chart(ctx, {
+    this.instancias[key] = new Chart(ctx, {
       type: "bar",
       data: {
         labels: Object.keys(datos),
@@ -201,7 +201,18 @@ const Charts = {
     });
   },
 
-  renderTodas() {
+  /**
+* Grafica de lineas y de barras reutilizadas dentro del panel de
+* Reportes (Sprint 6), usando los mismos renderLineChart/renderBarChart
+* de arriba pero con un canvas y una instancia propios (chLineRep/
+* chBarRep) para no interferir con las graficas del Tablero.
+*/
+renderGraficosReporte() {
+  this.renderLineChart("chLineRep", "lineRep");
+  this.renderBarChart("chBarRep", "barRep");
+},
+
+renderTodas() {
     this.renderLineChart();
     this.renderBarChart();
     this.renderDonutChart();
