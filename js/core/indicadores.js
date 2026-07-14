@@ -7,22 +7,29 @@
  * distribucion del riesgo para la grafica de dona y las alertas automaticas.
  *
  * Formulas utilizadas (todas sobre una escala de 0 a 100):
- *   - Cada respuesta Likert (1 a 5) se convierte a escala 0-100 con
- *     escala100(v) = (v - 1) / 4 * 100.
- *   - Indice de bienestar   = promedio de las 5 preguntas de la encuesta.
- *   - Clima organizacional  = promedio de las preguntas 2 (ambiente y
- *                              respeto) y 4 (reconocimiento).
- *   - Productividad         = promedio de las preguntas 1 (energia) y 3
- *                              (carga de trabajo manejable).
- *   - Riesgo psicosocial    = 100 - promedio de las preguntas 3 (carga
- *                              manejable) y 5 (equilibrio vida/trabajo): a
- *                              menor carga manejable y menor equilibrio,
- *                              mayor riesgo.
+ * - Cada respuesta Likert (1 a 5) se convierte a escala 0-100 con
+ *   escala100(v) = (v - 1) / 4 * 100.
+ * - Indice de bienestar = promedio de las 5 preguntas de la encuesta.
+ * - Clima organizacional = promedio de las preguntas 2 (ambiente y
+ *   respeto) y 4 (reconocimiento).
+ * - Productividad = promedio de las preguntas 1 (energia) y 3
+ *   (carga de trabajo manejable).
+ * - Riesgo psicosocial = 100 - promedio de las preguntas 3 (carga
+ *   manejable) y 5 (equilibrio vida/trabajo): a
+ *   menor carga manejable y menor equilibrio,
+ *   mayor riesgo.
  *
  * Mientras no existan encuestas guardadas, se usan los valores de
  * demostracion (KPIS_DASHBOARD, SERIE_*, RIESGO_PSICOSOCIAL, definidos en
  * data.js) para que el prototipo no se vea vacio. En cuanto exista al menos
  * una encuesta real, esos valores de demostracion dejan de utilizarse.
+ *
+ * Sprint 4A agrega el desglose real por area (IndicadoresPorArea), el
+ * ranking ejecutivo de areas (RankingAreas) y las alertas por area
+ * (AlertasPorArea), todo calculado a partir del campo "area" que ya
+ * captura la encuesta (ver data.js). Mientras un area no tenga encuestas
+ * registradas, simplemente no aparece en estos calculos: no se simula
+ * informacion por area bajo ninguna circunstancia.
  */
 
 const Indicadores = {
@@ -166,8 +173,8 @@ const Alertas = {
 
   /**
    * Evalua las reglas sobre los indicadores actuales de la empresa y
-   * devuelve la lista de alertas activas. Mientras no exista un modulo de
-   * areas/colaboradores (Sprint 4), las alertas son de alcance general.
+   * devuelve la lista de alertas activas. Vease tambien AlertasPorArea
+   * para las alertas desagregadas por area (Sprint 4A).
    */
   generar() {
     const info = Indicadores.calcularIndicadoresActuales();
@@ -181,6 +188,85 @@ const Alertas = {
       const valor = info.kpis[regla.campo].valor;
       if (regla.cumple(valor)) {
         alertas.push({ area: "Empresa", indicador: regla.indicador(valor), estado: regla.estado });
+      }
+    });
+    return alertas;
+  },
+};
+
+/* ---------- Indicadores desagregados por area (Sprint 4A) ---------- */
+
+const IndicadoresPorArea = {
+  /**
+   * Agrupa las encuestas guardadas por el campo "area" (tal como lo
+   * selecciono el colaborador al responder) y calcula los 4 indicadores
+   * para cada area que tenga al menos una encuesta real. Las areas sin
+   * respuestas registradas no se incluyen: nunca se simula informacion
+   * por area. Devuelve un arreglo ordenado de mayor a menor bienestar.
+   */
+  calcular() {
+    const encuestas = DataStore.getEncuestasGuardadas();
+    if (!encuestas.length) return [];
+
+    const grupos = {};
+    encuestas.forEach(e => {
+      if (!grupos[e.area]) grupos[e.area] = [];
+      grupos[e.area].push(e);
+    });
+
+    return Object.keys(grupos)
+      .map(area => ({
+        area,
+        totalEncuestas: grupos[area].length,
+        ...Indicadores.calcularDesdeEncuestas(grupos[area]),
+      }))
+      .sort((a, b) => b.bienestar - a.bienestar);
+  },
+};
+
+/* ---------- Ranking ejecutivo de areas (Sprint 4A) ---------- */
+
+const RankingAreas = {
+  /**
+   * Devuelve el area destacada en cada uno de los 4 indicadores
+   * (mayor bienestar, menor bienestar, mayor riesgo psicosocial y
+   * mejor productividad), o null si todavia no hay ninguna encuesta
+   * con area registrada.
+   */
+  calcular() {
+    const porArea = IndicadoresPorArea.calcular();
+    if (!porArea.length) return null;
+
+    const mejorEn = campo => porArea.reduce((mejor, actual) => (actual[campo] > mejor[campo] ? actual : mejor));
+    const peorEn = campo => porArea.reduce((peor, actual) => (actual[campo] < peor[campo] ? actual : peor));
+
+    return {
+      mayorBienestar: mejorEn("bienestar"),
+      menorBienestar: peorEn("bienestar"),
+      mayorRiesgo: mejorEn("riesgo"),
+      mejorProductividad: mejorEn("productividad"),
+    };
+  },
+};
+
+/* ---------- Alertas por area (Sprint 4A) ---------- */
+
+const AlertasPorArea = {
+  /**
+   * Evalua, para cada area con encuestas reales, si el bienestar es
+   * inferior a 70 o el riesgo psicosocial es superior a 80 (los mismos
+   * umbrales usados por Alertas para la empresa). Devuelve la lista de
+   * alertas activas por area; vacio si ninguna area supera los umbrales
+   * o si aun no hay encuestas con area registrada.
+   */
+  generar() {
+    const alertas = [];
+    IndicadoresPorArea.calcular().forEach(a => {
+      if (a.bienestar < 70) {
+        alertas.push({ area: a.area, indicador: `Bienestar de ${a.area} en ${a.bienestar}`, estado: "warn" });
+      }
+      if (a.riesgo > 80) {
+        alertas.push({ area: a.area, indicador: `Riesgo psicosocial de ${a.area} en ${a.riesgo}%`, estado: "danger" });
       }
     });
     return alertas;
