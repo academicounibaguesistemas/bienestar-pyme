@@ -99,6 +99,12 @@ const Encuestas = {
     );
 
     DataStore.guardarRespuestaEncuesta({ area, cargo, antiguedad, respuestas });
+
+    // Recalcula de inmediato el tablero y los reportes con la nueva
+    // respuesta, sin necesidad de recargar la pagina.
+    if (typeof Dashboard !== "undefined") Dashboard.render();
+    if (typeof Reportes !== "undefined") Reportes.render();
+    
     mostrarToast("Respuesta enviada correctamente. ¡Gracias por tu retroalimentacion!");
 
     document.getElementById("formEncuesta").reset();
