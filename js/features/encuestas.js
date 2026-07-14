@@ -68,6 +68,27 @@ const Encuestas = {
       campo("encAntiguedad", "Antigüedad en la empresa", ANTIGUEDAD_ENCUESTA)
     );
   },
+  /**
+  * Actualiza unicamente las opciones del select de area con las areas
+  * configuradas actualmente en DataStore.getAreas(), sin reconstruir el
+  * resto del formulario. Se invoca desde Configuracion al crear, editar
+  * o eliminar un area, para que el cambio se refleje de inmediato sin
+  * necesidad de recargar la pagina.
+  */
+  actualizarSelectAreas() {
+    const select = document.getElementById("encArea");
+    if (!select) return;
+
+    const valorActual = select.value;
+    const nombresAreas = DataStore.getAreas().map(a => a.nombre);
+
+    select.innerHTML =
+      '<option value="" disabled selected>Selecciona una opción...</option>' +
+      nombresAreas.map(o => `<option value="${o}">${o}</option>`).join("");
+
+    if (nombresAreas.includes(valorActual)) select.value = valorActual;
+  },
+  
 
   /** Calcula cuantas preguntas de bienestar ya tienen respuesta y actualiza la barra de progreso. */
   actualizarProgreso() {
