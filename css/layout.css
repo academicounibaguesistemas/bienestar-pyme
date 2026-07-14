@@ -1,0 +1,206 @@
+/* ===========================================================
+   BienEstar PYME — Layout del shell de la aplicacion
+   =========================================================== */
+#app {
+  display: none;
+  min-height: 100vh;
+  grid-template-columns: var(--sidebar-width) 1fr;
+}
+
+#app.active { display: grid; }
+
+/* ---------- Sidebar ---------- */
+.sidebar {
+  background: var(--color-sidebar-bg);
+  color: var(--color-sidebar-text);
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-lg) 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.sidebar__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 0 var(--space-lg) var(--space-lg);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  margin-bottom: var(--space-md);
+  color: #fff;
+  font-size: var(--fs-lg);
+  font-weight: 800;
+}
+
+.sidebar__brand span { color: var(--color-success); }
+
+.sidebar__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.sidebar__link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 12px var(--space-lg);
+  border-left: 3px solid transparent;
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: var(--color-sidebar-text);
+  transition: var(--transition);
+  background: none;
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+  width: 100%;
+  text-align: left;
+}
+
+.sidebar__link:hover {
+  background: var(--color-sidebar-active);
+  color: #fff;
+}
+
+.sidebar__link.active {
+  background: var(--color-sidebar-active);
+  border-left-color: var(--color-success);
+  color: #fff;
+}
+
+.sidebar__footer {
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding-top: var(--space-md);
+  margin-top: var(--space-md);
+}
+
+.sidebar__user {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 0 var(--space-lg) var(--space-md);
+  font-size: var(--fs-xs);
+}
+
+.avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: var(--fs-sm);
+  flex-shrink: 0;
+}
+
+/* ---------- Topbar ---------- */
+.topbar {
+  height: var(--topbar-height);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-lg);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.topbar__title h1 {
+  font-size: var(--fs-lg);
+}
+
+.topbar__meta {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+
+.topbar__right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 22px;
+  color: var(--color-text);
+}
+
+/* ---------- Contenido principal ---------- */
+.content {
+  padding: var(--space-lg);
+  max-width: 1400px;
+  width: 100%;
+}
+
+.view { display: none; }
+.view.active { display: block; animation: fadeIn .25s ease; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.grid-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.footer-note {
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: var(--fs-xs);
+  margin-top: var(--space-xl);
+  padding-bottom: var(--space-lg);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 960px) {
+  .grid-kpis { grid-template-columns: 1fr 1fr; }
+  .grid-2 { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 760px) {
+  #app { grid-template-columns: 1fr; }
+  .sidebar {
+    position: fixed;
+    left: 0; top: 0;
+    width: 240px;
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: var(--transition);
+    z-index: 100;
+  }
+  .sidebar.open { transform: translateX(0); }
+  .menu-toggle { display: block; }
+  .grid-kpis { grid-template-columns: 1fr; }
+  .content { padding: var(--space-md); }
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15,23,42,0.4);
+  z-index: 90;
+}
+.overlay.active { display: block; }
