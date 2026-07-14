@@ -12,7 +12,7 @@ const Router = {
     dash: "Tablero de indicadores",
     enc: "Encuestas de bienestar",
     rep: "Reportes y alertas",
-    cfg: "Configuracion",
+    cfg: "Configuración",
   },
 
   /** Cambia de vista, actualiza el titulo y resalta el enlace activo del sidebar. */
