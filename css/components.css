@@ -38,6 +38,10 @@
   margin-bottom: var(--space-md);
 }
 
+/* Variantes de ancho maximo para tarjetas de formulario (antes definidas con style="" en linea). */
+.card--form { max-width: 620px; }
+.card--wide { max-width: 720px; }
+
 /* KPI */
 .kpi {
   background: var(--color-surface);
@@ -151,9 +155,16 @@ tbody tr:hover { background: var(--color-bg); }
   margin-bottom: var(--space-lg);
 }
 .progress-bar__fill {
+  width: 0; /* Estado inicial; se actualiza en JS al responder la encuesta (antes en linea con style=""). */
   height: 100%;
   background: var(--color-primary);
   transition: width .3s ease;
+}
+
+/* Texto auxiliar bajo la barra de progreso (antes definido con style="" en linea). */
+.progress-label {
+  font-size: var(--fs-xs);
+  margin-bottom: var(--space-md);
 }
 
 /* Toasts */
@@ -183,7 +194,7 @@ tbody tr:hover { background: var(--color-bg); }
   to { opacity: 1; transform: translateX(0); }
 }
 
-/* Estado vacio / empty state */
+/* Estado vacio / empty state (preparado para futuros modulos: dashboard avanzado, reportes, admin). */
 .empty-state {
   text-align: center;
   padding: var(--space-xl);
