@@ -64,8 +64,8 @@
       <div class="sidebar__user">
         <div class="avatar" id="userAvatar">AD</div>
         <div>
-          <div id="userNombre" style="color:#fff;font-weight:600;font-size:13px">admin@pyme.co</div>
-          <div id="userRol" class="text-muted" style="font-size:11px">Administrador</div>
+          <div id="userNombre" class="sidebar__user-name">admin@pyme.co</div>
+          <div id="userRol" class="text-muted sidebar__user-role">Administrador</div>
         </div>
       </div>
       <button class="sidebar__link" id="btnLogout">↩ Cerrar sesión</button>
@@ -74,14 +74,14 @@
 
   <div>
     <header class="topbar">
-      <div style="display:flex;align-items:center;gap:12px">
+      <div class="topbar__left">
         <button class="menu-toggle" id="menuToggle">☰</button>
         <div class="topbar__title">
           <h1 id="titulo">Tablero de indicadores</h1>
         </div>
       </div>
       <div class="topbar__right">
-        <div style="text-align:right">
+        <div class="topbar__info">
           <div class="topbar__meta" id="empinfo">Empresa demo · Ibagué · 48 colaboradores</div>
           <div class="topbar__meta" id="fecha"></div>
         </div>
@@ -147,14 +147,14 @@
 
       <!-- ===== ENCUESTAS ===== -->
       <section id="enc" class="view">
-        <div class="card" style="max-width:720px">
+        <div class="card card--wide">
           <h3>Encuesta de bienestar laboral (escala 1 a 5)</h3>
 
-          <div class="progress-bar"><div class="progress-bar__fill" id="encuestaProgreso" style="width:0%"></div></div>
-          <div class="text-muted" id="encuestaProgresoLabel" style="font-size:var(--fs-xs);margin-bottom:var(--space-md)"></div>
+          <div class="progress-bar"><div class="progress-bar__fill" id="encuestaProgreso"></div></div>
+          <div class="text-muted progress-label" id="encuestaProgresoLabel"></div>
 
           <form id="formEncuesta"></form>
-          <button type="submit" form="formEncuesta" class="btn btn-primary" style="margin-top:var(--space-md)">Enviar respuesta</button>
+          <button type="submit" form="formEncuesta" class="btn btn-primary mt-md">Enviar respuesta</button>
         </div>
       </section>
 
@@ -167,12 +167,12 @@
             <tbody></tbody>
           </table>
         </div>
-        <button class="btn btn-primary" id="btnExportarPDF" style="margin-top:var(--space-md)">🖨 Exportar / Imprimir PDF</button>
+        <button class="btn btn-primary mt-md" id="btnExportarPDF">🖨 Exportar / Imprimir PDF</button>
       </section>
 
       <!-- ===== CONFIGURACION ===== -->
       <section id="cfg" class="view">
-        <div class="card" style="max-width:620px">
+        <div class="card card--form">
           <h3>Configuración de la empresa</h3>
           <form id="formConfiguracion">
             <div class="field">
@@ -203,15 +203,20 @@
 
 <div id="toast-container"></div>
 
-<script src="js/data.js"></script>
-<script src="js/utils.js"></script>
-<script src="js/auth.js"></script>
-<script src="js/router.js"></script>
-<script src="js/charts.js"></script>
-<script src="js/dashboard.js"></script>
-<script src="js/encuestas.js"></script>
-<script src="js/reportes.js"></script>
-<script src="js/configuracion.js"></script>
+<!-- Nucleo: capa de datos, utilidades, autenticacion, enrutado SPA y graficas. -->
+<script src="js/core/data.js"></script>
+<script src="js/core/utils.js"></script>
+<script src="js/core/auth.js"></script>
+<script src="js/core/router.js"></script>
+<script src="js/core/charts.js"></script>
+
+<!-- Modulos de funcionalidad (uno por vista de la aplicacion). -->
+<script src="js/features/dashboard.js"></script>
+<script src="js/features/encuestas.js"></script>
+<script src="js/features/reportes.js"></script>
+<script src="js/features/configuracion.js"></script>
+
+<!-- Arranque de la aplicacion (debe cargarse al final). -->
 <script src="js/app.js"></script>
 </body>
 </html>
