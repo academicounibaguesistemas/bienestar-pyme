@@ -4,7 +4,7 @@
  * Centraliza la información simulada (mock) y su persistencia en
  * localStorage. En una version de produccion este modulo se
  * sustituiria por llamadas a una API real, sin tener que tocar
- * el resto de la aplicacion.
+ * el resto de la aplicación.
  */
 
 const STORAGE_KEYS = {
@@ -21,6 +21,38 @@ const PREGUNTAS_ENCUESTA = [
   "Mi carga de trabajo es manejable.",
   "Recibo reconocimiento por mi trabajo.",
   "Puedo equilibrar mi vida personal y laboral.",
+];
+
+/*
+ * Preguntas de clasificacion del colaborador que responde la encuesta.
+ * Se almacenan junto con las respuestas de bienestar para que, en un
+ * proximo sprint, el Dashboard y los Reportes puedan calcular
+ * indicadores reales desagregados por area, cargo o antiguedad sin
+ * necesidad de simular esa informacion.
+ */
+const AREAS_ENCUESTA = [
+  "Administración",
+  "Comercial",
+  "Ventas",
+  "Operaciones",
+  "Servicio al Cliente",
+  "Logística",
+  "Otra",
+];
+
+const CARGOS_ENCUESTA = [
+  "Operativo",
+  "Administrativo",
+  "Profesional",
+  "Coordinador",
+  "Directivo",
+];
+
+const ANTIGUEDAD_ENCUESTA = [
+  "Menos de 1 año",
+  "Entre 1 y 3 años",
+  "Entre 3 y 5 años",
+  "Más de 5 años",
 ];
 
 /* Serie historica (mock) de bienestar y productividad para la grafica de lineas. */
@@ -81,9 +113,20 @@ const DataStore = {
     return raw ? JSON.parse(raw) : [];
   },
 
-  guardarRespuestaEncuesta(respuestas) {
+  /**
+   * Guarda una respuesta de encuesta completa, incluyendo las preguntas de
+   * clasificacion (area, cargo, antiguedad) y las respuestas de bienestar.
+   * `datos` tiene la forma { area, cargo, antiguedad, respuestas }.
+   */
+  guardarRespuestaEncuesta(datos) {
     const lista = this.getEncuestasGuardadas();
-    lista.push({ fecha: new Date().toISOString(), respuestas });
+    lista.push({
+      fecha: new Date().toISOString(),
+      area: datos.area,
+      cargo: datos.cargo,
+      antiguedad: datos.antiguedad,
+      respuestas: datos.respuestas,
+    });
     localStorage.setItem(STORAGE_KEYS.ENCUESTAS, JSON.stringify(lista));
     return lista;
   },
