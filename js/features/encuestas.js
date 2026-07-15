@@ -199,7 +199,7 @@ const Encuestas = {
       if (typeof Dashboard !== "undefined") Dashboard.render();
           if (typeof Reportes !== "undefined") Reportes.render();
 
-      mostrarToast("Respuesta enviada correctamente. ¡Gracias por tu retroalimentacion!");
+      mostrarToast("Respuesta enviada correctamente. ¡Gracias por tu retroalimentación!");
 
       document.getElementById("formEncuesta").reset();
           this.actualizarProgreso();
