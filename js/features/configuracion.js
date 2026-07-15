@@ -90,7 +90,7 @@ const Configuracion = {
     <td>${u.nombre}</td>
     <td>${u.correo}</td>
     <td>${u.rol}</td>
-    <td>${badgeHTML(u.estado === "Activo" ? "ok" : "danger")}</td>
+    <td>${estadoActivoHTML(u.estado === "Activo")}</td>
     <td>
     <button type="button" class="btn btn-ghost btn-sm" data-editar-usuario="${u.id}">Editar</button>
     <button type="button" class="btn btn-ghost btn-sm" data-estado-usuario="${u.id}">${u.estado === "Activo" ? "Desactivar" : "Activar"}</button>
@@ -302,7 +302,7 @@ const Configuracion = {
     ? periodos.map(p => `
     <tr>
     <td>${p.nombre}</td>
-    <td>${p.activo ? badgeHTML("ok") : '<span class="text-muted">Inactivo</span>'}</td>
+    <td>${p.activo ? estadoActivoHTML(true) : '<span class="text-muted">Inactivo</span>'}</td>
     <td>
     ${p.activo ? "" : `<button type="button" class="btn btn-ghost btn-sm" data-activar-periodo="${p.id}">Activar</button>`}
     <button type="button" class="btn btn-ghost btn-sm" data-eliminar-periodo="${p.id}">Eliminar</button>
