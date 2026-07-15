@@ -190,16 +190,18 @@ const DistribucionRiesgo = {
 
 const Alertas = {
   reglas: [
-    { campo: "bienestar", cumple: v => v < 70, indicador: v => `Bienestar general en ${v}`, estado: "warn" },
-    { campo: "riesgo", cumple: v => v > 80, indicador: v => `Riesgo psicosocial en ${v}%`, estado: "danger" },
-    { campo: "productividad", cumple: v => v < 75, indicador: v => `Productividad general en ${v}`, estado: "warn" },
-  ],
+    { campo: "bienestar", invertido: false, indicador: v => `Bienestar general en ${v}` },
+    { campo: "riesgo", invertido: true, indicador: v => `Riesgo psicosocial en ${v}%` },
+    { campo: "productividad", invertido: false, indicador: v => `Productividad general en ${v}` },
+    ],
 
   /**
-   * Evalua las reglas sobre los indicadores actuales de la empresa y
-   * devuelve la lista de alertas activas. Vease tambien AlertasPorArea
-   * para las alertas desagregadas por area (Sprint 4A).
-   */
+  * Evalua los indicadores actuales de la empresa con la misma logica de
+  * clasificacion tipo semaforo usada en el resto del sistema
+  * (estadoSemaforo, ver utils.js) y devuelve la lista de alertas activas:
+  * unicamente los indicadores que no estan en estado "ok". Vease tambien
+  * AlertasPorArea para las alertas desagregadas por area (Sprint 4A).
+  */
   generar() {
     const info = Indicadores.calcularIndicadoresActuales();
 
@@ -210,8 +212,9 @@ const Alertas = {
     const alertas = [];
     this.reglas.forEach(regla => {
       const valor = info.kpis[regla.campo].valor;
-      if (regla.cumple(valor)) {
-        alertas.push({ area: "Empresa", indicador: regla.indicador(valor), estado: regla.estado });
+      const estado = estadoSemaforo(valor, regla.invertido);
+      if (estado !== "ok") {
+        alertas.push({ area: "Empresa", indicador: regla.indicador(valor), estado });
       }
     });
     return alertas;
@@ -279,20 +282,24 @@ const RankingAreas = {
 
 const AlertasPorArea = {
   /**
-   * Evalua, para cada area con encuestas reales, si el bienestar es
-   * inferior a 70 o el riesgo psicosocial es superior a 80 (los mismos
-   * umbrales usados por Alertas para la empresa). Devuelve la lista de
-   * alertas activas por area; vacio si ninguna area supera los umbrales
-   * o si aun no hay encuestas con area registrada.
-   */
+  * Evalua, para cada area con encuestas reales, el bienestar y el
+  * riesgo psicosocial con la misma logica de semaforo usada en el
+  * resto del sistema (estadoSemaforo, ver utils.js), en vez de un
+  * segundo conjunto de umbrales fijos. Devuelve la lista de alertas
+  * activas por area; vacio si ninguna area sale de un estado "ok" o
+  * si aun no hay encuestas con area registrada.
+  */
   generar() {
     const alertas = [];
     IndicadoresPorArea.calcular().forEach(a => {
-      if (a.bienestar < 70) {
-        alertas.push({ area: a.area, indicador: `Bienestar de ${a.area} en ${a.bienestar}`, estado: "warn" });
+      const estadoBienestar = estadoSemaforo(a.bienestar);
+      if (estadoBienestar !== "ok") {
+        alertas.push({ area: a.area, indicador: `Bienestar de ${a.area} en ${a.bienestar}`, estado: estadoBienestar });
       }
-      if (a.riesgo > 80) {
-        alertas.push({ area: a.area, indicador: `Riesgo psicosocial de ${a.area} en ${a.riesgo}%`, estado: "danger" });
+
+      const estadoRiesgo = estadoSemaforo(a.riesgo, true);
+      if (estadoRiesgo !== "ok") {
+        alertas.push({ area: a.area, indicador: `Riesgo psicosocial de ${a.area} en ${a.riesgo}%`, estado: estadoRiesgo });
       }
     });
     return alertas;
