@@ -23,21 +23,86 @@
  */
 
 const Encuestas = {
-    render() {
-          const form = document.getElementById("formEncuesta");
-          if (!form || form.dataset.listo) return; // Solo se genera una vez.
+render() {
+    this.renderIntro();
+},
 
-      form.innerHTML = this.camposClasificacionHTML() + this.dimensionesHTML();
+    /**
+    * Pantalla de bienvenida: nombre de la empresa, objetivo de la encuesta,
+    * tiempo estimado y confidencialidad. Se muestra cada vez que se entra
+    * a la vista de Encuestas; el formulario (clasificacion + dimensiones)
+    * solo se construye la primera vez que el colaborador hace clic en
+    * "Comenzar encuesta" (ver iniciar()).
+    */
+    renderIntro() {
+        const intro = document.getElementById("encuestaIntro");
+        const progresoWrap = document.getElementById("encuestaProgresoWrap");
+        const form = document.getElementById("formEncuesta");
+        const btnEnviar = document.getElementById("btnEnviarEncuesta");
+        const gracias = document.getElementById("encuestaGracias");
+        if (!intro) return;
 
-      // Los listeners se agregan aqui (en JS) en lugar de con onchange="" en el
-      // marcado, para mantener el HTML libre de comportamiento inline.
-      form.querySelectorAll('input[type="radio"]').forEach(input => {
-              input.addEventListener("change", () => this.actualizarProgreso());
-      });
+        const empresa = DataStore.getEmpresa();
 
-      form.dataset.listo = "true";
-          this.actualizarProgreso();
+        intro.innerHTML = `
+        <div class="enc-intro">
+        <div class="enc-intro__empresa">${empresa.nombre}</div>
+        <h2>Encuesta de bienestar laboral</h2>
+        <p class="enc-intro__objetivo">Esta encuesta busca conocer tu percepcion sobre el bienestar, el clima y la carga laboral, con el fin de identificar oportunidades de mejora para todo el equipo.</p>
+        <div class="enc-intro__meta">
+        <div class="enc-intro__meta-item">Tiempo estimado: 3 a 5 minutos</div>
+        <div class="enc-intro__meta-item">24 preguntas en 6 dimensiones</div>
+        </div>
+        <p class="enc-intro__confidencialidad">Tus respuestas son confidenciales y se analizan de forma agregada; los resultados individuales nunca se comparten.</p>
+        <button type="button" class="btn btn-primary enc-btn-comenzar" id="btnComenzarEncuesta">Comenzar encuesta</button>
+        </div>
+        `;
+
+        intro.classList.remove("hidden");
+        if (progresoWrap) progresoWrap.classList.add("hidden");
+        if (form) form.classList.add("hidden");
+        if (btnEnviar) btnEnviar.classList.add("hidden");
+        if (gracias) {
+            gracias.classList.add("hidden");
+            gracias.innerHTML = "";
+        }
+
+        document.getElementById("btnComenzarEncuesta").addEventListener("click", () => this.iniciar());
     },
+
+    /**
+    * Construye el formulario (clasificacion + dimensiones) la primera vez
+    * que el colaborador hace clic en "Comenzar encuesta" y lo muestra,
+    * ocultando la pantalla de bienvenida. Si el formulario ya se habia
+    * construido antes (dataset.listo), no lo vuelve a generar para no
+    * perder las respuestas que ya se hayan marcado.
+    */
+    iniciar() {
+        const intro = document.getElementById("encuestaIntro");
+        const progresoWrap = document.getElementById("encuestaProgresoWrap");
+        const form = document.getElementById("formEncuesta");
+        const btnEnviar = document.getElementById("btnEnviarEncuesta");
+
+        intro.classList.add("hidden");
+        if (progresoWrap) progresoWrap.classList.remove("hidden");
+        form.classList.remove("hidden");
+        if (btnEnviar) btnEnviar.classList.remove("hidden");
+
+        if (!form.dataset.listo) {
+            form.innerHTML = this.camposClasificacionHTML() + this.dimensionesHTML();
+
+            // Los listeners se agregan aqui (en JS) en lugar de con onchange="" en el
+            // marcado, para mantener el HTML libre de comportamiento inline.
+            form.querySelectorAll('input[type="radio"]').forEach(input => {
+                input.addEventListener("change", () => this.actualizarProgreso());
+            });
+
+            form.dataset.listo = "true";
+        }
+
+        this.actualizarProgreso();
+    },
+    
 
     /**
          * Genera los 3 campos de clasificacion del colaborador (area, cargo,
