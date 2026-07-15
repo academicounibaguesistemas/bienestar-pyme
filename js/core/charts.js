@@ -30,6 +30,18 @@ const Charts = {
     return [cssVar("--color-primary"), cssVar("--color-success"), cssVar("--color-warning"), cssVar("--color-danger")];
   },
 
+  /** Muestra/oculta, junto a una grafica de barras, un mensaje de estado vacio cuando aun no hay datos reales para ese agrupamiento (cargo o antiguedad). Reutiliza la clase ".text-muted" ya existente. */
+  mostrarEstadoVacio(canvas, vacio) {
+    let mensaje = canvas.parentElement.querySelector(".chart-empty-state");
+    if (!mensaje) {
+      mensaje = crearElemento("p", "text-muted chart-empty-state");
+      mensaje.textContent = "Aún no existen suficientes datos para generar esta visualización.";
+      canvas.insertAdjacentElement("afterend", mensaje);
+    }
+    canvas.style.display = vacio ? "none" : "";
+    mensaje.style.display = vacio ? "" : "none";
+  },
+
   /** Grafica de lineas: evolucion de bienestar y productividad. */
   renderLineChart(canvasId = "chLine", key = "line") {
     const ctx = document.getElementById(canvasId);
@@ -117,6 +129,7 @@ const Charts = {
     if (this.instancias.barCargo) this.instancias.barCargo.destroy();
 
     const porCargo = IndicadoresPorCargo.calcular();
+    this.mostrarEstadoVacio(ctx, !porCargo.length);
     if (!porCargo.length) return;
 
     const datos = Object.fromEntries(porCargo.map(c => [c.cargo, c.bienestar]));
@@ -152,6 +165,7 @@ const Charts = {
     if (this.instancias.barAntiguedad) this.instancias.barAntiguedad.destroy();
 
     const porAntiguedad = IndicadoresPorAntiguedad.calcular();
+    this.mostrarEstadoVacio(ctx, !porAntiguedad.length);
     if (!porAntiguedad.length) return;
 
     const datos = Object.fromEntries(porAntiguedad.map(a => [a.antiguedad, a.bienestar]));
