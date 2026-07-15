@@ -48,7 +48,7 @@ render() {
         <div class="enc-intro">
         <div class="enc-intro__empresa">${empresa.nombre}</div>
         <h2>Encuesta de bienestar laboral</h2>
-        <p class="enc-intro__objetivo">Esta encuesta busca conocer tu percepcion sobre el bienestar, el clima y la carga laboral, con el fin de identificar oportunidades de mejora para todo el equipo.</p>
+        <p class="enc-intro__objetivo">Esta encuesta busca conocer tu percepción sobre el bienestar, el clima y la carga laboral, con el fin de identificar oportunidades de mejora para todo el equipo.</p>
         <div class="enc-intro__meta">
         <div class="enc-intro__meta-item">Tiempo estimado: 3 a 5 minutos</div>
         <div class="enc-intro__meta-item">24 preguntas en 6 dimensiones</div>
