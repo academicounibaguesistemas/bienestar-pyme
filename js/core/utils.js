@@ -21,6 +21,13 @@ function badgeHTML(estado) {
   return `<span class="badge ${claseBadge(estado)}">${etiquetaEstado(estado)}</span>`;
 }
 
+/**
+  * Badge de estado activo/inactivo (usuarios y periodos de medicion), reutilizando ".badge" y claseBadge() ya existentes. A diferencia de badgeHTML() (pensado para el semaforo ok/warn/danger de indicadores, con etiquetas "Optimo/Atencion/Critico"), este badge es especifico para el estado Activo/Inactivo de un registro administrativo.
+   */
+function estadoActivoHTML(activo) {
+  return `<span class="badge ${claseBadge(activo ? "ok" : "danger")}">${activo ? "Activo" : "Inactivo"}</span>`;
+}
+
 /** Formatea la fecha actual en espanol, ej. "13 de julio de 2026". */
 function fechaLarga(date = new Date()) {
   return date.toLocaleDateString("es-CO", { day: "numeric", month: "long", year: "numeric" });
